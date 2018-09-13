@@ -1,0 +1,98 @@
+<?php
+
+
+$firstnameErr = $emailErr = $lastnameErr = $passwordErr = $username = "";
+$firstname = $email = $lastname = $password = $username = "";
+$validate=0;
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  {if (empty($_POST["firstname"])) {
+    $firstnameErr = "firstName is required";
+  } else {
+    $firstname = test_input($_POST["firstname"]);
+  }}
+  {if (empty($_POST["lastname"])) {
+    $lastnameErr = "";
+  } else {
+    $lastname = test_input($_POST["lastname"]);
+  }}
+
+
+  {if (empty($_POST["email"])) {
+    $emailErr = "Email is required";
+  } else {
+    $email = test_input($_POST["email"]);
+  }
+    }
+  
+  {if (empty($_POST["password"])) {
+    $passwordErr = "password is required";
+  } else {
+    $password = test_input($_POST["password"]);
+  }}
+
+  {if (empty($_POST["username"])) {
+    $usernameErr = "username is required";
+  } else {
+    $username = test_input($_POST["username"]);
+  }}
+  $validate=1;
+}
+function test_input($data) {
+  $data = trim($data);
+  $data = stripslashes($data);
+  $data = htmlspecialchars($data);
+  return $data;
+}
+
+
+if($validate)
+{
+error_reporting(E_ALL);
+define('DB_HOST', 'localhost');
+define('DB_NAME', 'mydb');
+define('DB_USER', 'root');
+define('DB_PASSWORD', '123456');
+
+
+$servername = "localhost";
+$username = "root";
+$password = "123456";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password,'mydb');
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+
+if(isset($_POST['submit'])){
+$fname=$_POST['firstname'];
+$lname=$_POST['lastname'];
+$email=$_POST['email'];
+$pass=$_POST['password'];
+$username=$_POST['username'];
+$sql="INSERT INTO user (firstname,lastname,email,password,username) VALUES ('$fname','$lname','$email','$pass','$username')";
+
+if ($conn->query($sql) ===TRUE) {
+	header("Location:/task/register.php?var=you are now registered");
+    echo "Record updated successfully";
+} else {
+	header("Location:/task/register.php?error=email");
+    echo "Error updating record: " . $conn->error;
+}
+}
+}
+?>
+
+
+
+
+
+
+
+
+
+
